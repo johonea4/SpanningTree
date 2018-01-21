@@ -35,16 +35,37 @@ class Switch(StpSwitch):
         super(Switch, self).__init__(idNum, topolink, neighbors)
         
         #TODO: Define a data structure to keep track of which links are part of / not part of the spanning tree.
+        self.data = dict()
+        self.data['root'] = idNum
+        self.data['distance'] = 0
+        self.data['actives'] = []
+        self.data['passthru'] = idNum 
+
+        self.distLinks = dict()
+        for l in self.links:
+            self.distLinks[l] = 0
+
 
     def send_initial_messages(self):
         #TODO: This function needs to create and send the initial messages from this switch.
         #      Messages are sent via the superclass method send_message(Message msg) - see Message.py.
 	#      Use self.send_message(msg) to send this.  DO NOT use self.topology.send_message(msg)
+
+        for l in self.links:
+            m = Message(self.switchID,0,self.switchID,l,False)
+            self.send_message(m)
+
         return
         
     def process_message(self, message):
         #TODO: This function needs to accept an incoming message and process it accordingly.
         #      This function is called every time the switch receives a new message.
+        s = "Root: " + str(message.root)
+        s += " Distance: " + str(message.distance)
+        s += " Origin: " + str(message.origin)
+        s += " Destination: " + str(message.destination)
+        s += " PassThrough: " + str(message.pathThrough)
+        print(s)
         return
         
     def generate_logstring(self):
